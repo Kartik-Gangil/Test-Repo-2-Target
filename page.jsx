@@ -1,4 +1,3 @@
-// import * as React from "react";
 import { DocsPage } from "@/components/docs/docs-page";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Callout } from "@/components/docs/callout";
