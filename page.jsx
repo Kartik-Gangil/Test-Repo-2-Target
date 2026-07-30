@@ -1,3 +1,4 @@
+```tsx
 // import * as React from "react";
 import { DocsPage } from "@/components/docs/docs-page";
 import { CodeBlock } from "@/components/docs/code-block";
@@ -162,9 +163,11 @@ app.get("/api/auth/linkedin/callback", async (req, res) => {
     clientSecret,
     callbackUrl
   );
+  console.log(data);
   return res.json(data);
 });`}
       />
     </DocsPage>
   );
 }
+```
