@@ -1,4 +1,4 @@
-// import * as React from "react";
+import * as React from "react";
 import { DocsPage } from "@/components/docs/docs-page";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Callout } from "@/components/docs/callout";
@@ -7,6 +7,7 @@ const toc = [
   { id: "google", text: "Google", level: 2 as const },
   { id: "github", text: "GitHub", level: 2 as const },
   { id: "linkedin", text: "LinkedIn", level: 2 as const },
+  { id: "meta", text: "Meta", level: 2 as const },
 ];
 
 export default function ProvidersPage() {
@@ -165,6 +166,47 @@ app.get("/api/auth/linkedin/callback", async (req, res) => {
   return res.json(data);
 });`}
       />
-    </DocsPage>
+
+      <h2 id="meta">Meta</h2>
+      <ol className="ml-5 list-decimal space-y-2 text-[15px] text-foreground/90">
+        <li>
+          Create a Facebook app via the Facebook Developers portal and obtain
+          the App ID and App Secret.
+        </li>
+        <li>
+          Set <code>META_CLIENT_ID</code> and
+          <code>META_CLIENT_SECRET</code> in your <code>.env</code>.
+        </li>
+        <li>
+          Configure the callback URL as{" "}
+          <code>http://localhost:8000/api/auth/meta/callback</code>.
+        </li>
+      </ol>
+      <CodeBlock
+        filename="routes/auth.js"
+        language="js"
+        code={`import { MetaLogin, MetaCallback } from "@kartikgangil/watchman_js";
+
+const metaClientId = process.env.META_CLIENT_ID;
+const metaClientSecret = process.env.META_CLIENT_SECRET;
+const callbackUrl = "http://localhost:8000/api/auth/meta/callback";
+
+// Initiate login — redirect user to Meta
+app.get("/meta", (req, res) => {
+  const uri = MetaLogin(metaClientId, callbackUrl);
+  return res.redirect(uri);
+});
+
+// Handle callback — exchange code for user data
+app.get("/api/auth/meta/callback", async (req, res) => {
+  const data = await MetaCallback(
+    req.query.code,
+    metaClientId,
+    metaClientSecret,
+    callbackUrl
   );
-}
+  console.log(data);
+  return res.json(data);
+});`}
+      />
+    </DocsPage>
