@@ -1,9 +1,10 @@
-// import * as React from "react";
+import * as React from "react";
 import { DocsPage } from "@/components/docs/docs-page";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Callout } from "@/components/docs/callout";
 
 const toc = [
+  { id: "installation", text: "Installation", level: 2 },
   { id: "google", text: "Google", level: 2 },
   { id: "github", text: "GitHub", level: 2  },
   { id: "linkedin", text: "LinkedIn", level: 2 },
@@ -17,6 +18,12 @@ export default function ProvidersPage() {
       description="Setup steps and code examples for every built-in OAuth provider: Google, GitHub, and LinkedIn."
       toc={toc}
     >
+      <h2 id="installation">Installation</h2>
+      <p>
+        Install the <code>@kartikgangil/watchman_js</code> package via npm:
+      </p>
+      <CodeBlock filename="package.json" language="bash" code={`npm install @kartikgangil/watchman_js`} />
+
       <h2 id="google">Google</h2>
       <ol className="ml-5 list-decimal space-y-2 text-[15px] text-foreground/90">
         <li>
@@ -81,90 +88,4 @@ app.get("/api/auth/google/callback", async (req, res) => {
         <li>
           Copy the <strong>Client ID</strong> and generate a{" "}
           <strong>Client Secret</strong>, then set them as{" "}
-          <code>GITHUB_CLIENT_ID</code> and <code>GITHUB_CLIENT_SECRET</code>.
-        </li>
-      </ol>
-      <CodeBlock
-        filename="routes/auth.js"
-        language="js"
-        code={`import { GithubLogin, GithubCallback } from "@kartikgangil/watchman_js";
-
-const clientId = process.env.GITHUB_CLIENT_ID;
-const clientSecret = process.env.GITHUB_CLIENT_SECRET;
-const callbackUrl = "http://localhost:8000/api/auth/github/callback";
-
-// Initiate login — redirect user to GitHub
-app.get("/github", async (req, res) => {
-  const uri = await GithubLogin(callbackUrl, clientId);
-  return res.redirect(uri);
-});
-
-// Handle callback — exchange code for user data
-app.get("/api/auth/github/callback", async (req, res) => {
-  const data = await GithubCallback(
-    req.query.code,
-    clientId,
-    clientSecret
-  );
-  return res.json(data);
-});`}
-      />
-
-      <Callout type="note">
-        Note the argument order for <code>GithubLogin</code>:{" "}
-        <strong>callbackUrl first, then clientId</strong>. This differs from
-        the Google provider where clientId comes first.
-      </Callout>
-
-      <h2 id="linkedin">LinkedIn</h2>
-      <ol className="ml-5 list-decimal space-y-2 text-[15px] text-foreground/90">
-        <li>
-          Create an app on the{" "}
-          <a
-            href="https://developer.linkedin.com/apps"
-            target="_blank"
-            rel="noreferrer"
-          >
-            LinkedIn Developer Portal
-          </a>
-          .
-        </li>
-        <li>
-          Under <strong>Auth</strong>, add{" "}
-          <code>http://localhost:8000/api/auth/linkedin/callback</code> as an
-          authorized redirect URL.
-        </li>
-        <li>
-          Set <code>LINKEDIN_CLIENT_ID</code> and{" "}
-          <code>LINKEDIN_CLIENT_SECRET</code> in your <code>.env</code>.
-        </li>
-      </ol>
-      <CodeBlock
-        filename="routes/auth.js"
-        language="js"
-        code={`import { LinkedInLogin, LinkedInCallback } from "@kartikgangil/watchman_js";
-
-const clientId = process.env.LINKEDIN_CLIENT_ID;
-const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
-const callbackUrl = "http://localhost:8000/api/auth/linkedin/callback";
-
-// Initiate login — redirect user to LinkedIn
-app.get("/linkedin", (req, res) => {
-  const uri = LinkedInLogin(clientId, callbackUrl);
-  return res.redirect(uri);
-});
-
-// Handle callback — exchange code for user data
-app.get("/api/auth/linkedin/callback", async (req, res) => {
-  const data = await LinkedInCallback(
-    req.query.code,
-    clientId,
-    clientSecret,
-    callbackUrl
-  );
-  return res.json(data);
-});`}
-      />
-    </DocsPage>
-  );
-}
+          <code>GITHUB_CLIENT_ID</code>
