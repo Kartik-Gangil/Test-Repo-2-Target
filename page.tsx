@@ -4,9 +4,9 @@ import { CodeBlock } from "@/components/docs/code-block";
 import { Callout } from "@/components/docs/callout";
 
 const toc = [
-  { id: "google", text: "Google", level: 2 },
-  { id: "github", text: "GitHub", level: 2  },
-  { id: "linkedin", text: "LinkedIn", level: 2 },
+  { id: "google", text: "Google", level: 2 as const },
+  { id: "github", text: "GitHub", level: 2 as const },
+  { id: "linkedin", text: "LinkedIn", level: 2 as const },
 ];
 
 export default function ProvidersPage() {
