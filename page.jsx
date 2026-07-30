@@ -1,11 +1,25 @@
-// import * as React from "react";
+import * as React from "react";
 import { DocsPage } from "@/components/docs/docs-page";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Callout } from "@/components/docs/callout";
 
 const toc = [
+  { id: "watchman", text: "WATCHMAN JS", level: 2 },
+  { id: "supported", text: "Supported Platforms", level: 2 },
+  { id: "why-use", text: "Why Use WATCHMAN JS?", level: 2 },
+  { id: "installation", text: "Installation", level: 2 },
+  { id: "usage-guide", text: "Usage Guide", level: 2 },
+  { id: "manual-auth", text: "Manual Authentication", level: 3 },
+  { id: "verify-token", text: "Verify Token", level: 3 },
+  { id: "google-auth", text: "Google Authentication", level: 3 },
+  { id: "github-auth", text: "GitHub Authentication", level: 3 },
+  { id: "linkedin-auth", text: "LinkedIn Authentication", level: 3 },
+  { id: "how-it-works", text: "How It Works", level: 2 },
+  { id: "use-cases", text: "Use Cases", level: 2 },
+  { id: "contributing", text: "Contributing", level: 2 },
+  { id: "support", text: "Support", level: 2 },
   { id: "google", text: "Google", level: 2 },
-  { id: "github", text: "GitHub", level: 2  },
+  { id: "github", text: "GitHub", level: 2 },
   { id: "linkedin", text: "LinkedIn", level: 2 },
 ];
 
@@ -17,154 +31,171 @@ export default function ProvidersPage() {
       description="Setup steps and code examples for every built-in OAuth provider: Google, GitHub, and LinkedIn."
       toc={toc}
     >
-      <h2 id="google">Google</h2>
-      <ol className="ml-5 list-decimal space-y-2 text-[15px] text-foreground/90">
-        <li>
-          Open the{" "}
-          <a
-            href="https://console.cloud.google.com/apis/credentials"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Google Cloud Console
-          </a>{" "}
-          and create an OAuth 2.0 Client ID (Web application).
-        </li>
-        <li>
-          Add{" "}
-          <code>http://localhost:8000/api/auth/google/callback</code> as an
-          authorized redirect URI for local development.
-        </li>
-        <li>
-          Copy the <strong>Client ID</strong> and <strong>Client Secret</strong>{" "}
-          into your <code>.env</code> as <code>GOOGLE_CLIENT_ID</code> and{" "}
-          <code>GOOGLE_CLIENT_SECRET</code>.
-        </li>
-      </ol>
+      <h2 id="watchman">🚀 WATCHMAN JS</h2>
+      <p>
+        <strong>One place to handle OAuth for all platforms.</strong>
+      </p>
+      <p>
+        WATCHMAN JS is a lightweight authentication library that simplifies OAuth
+        integration across multiple platforms. Instead of handling different OAuth
+        flows separately, you get a unified and easy‑to‑use interface.
+      </p>
+
+      <h2 id="supported">🌐 Supported Platforms</h2>
+      <ul className="list-disc ml-5">
+        <li>Google</li>
+        <li>LinkedIn</li>
+        <li>GitHub</li>
+      </ul>
+
+      <h2 id="why-use">✨ Why Use WATCHMAN JS?</h2>
+      <ul className="list-disc ml-5">
+        <li>⚡ Simple plug‑and‑play setup</li>
+        <li>🧩 Clean and minimal API</li>
+        <li>📦 One‑command installation</li>
+        <li>👶 Beginner‑friendly</li>
+        <li>🔄 Unified OAuth handling across platforms</li>
+      </ul>
+
+      <h2 id="installation">📦 Installation</h2>
       <CodeBlock
-        filename="routes/auth.js"
-        language="js"
-        code={`import { GoogleLogin, GoogleCallback } from "@kartikgangil/watchman_js";
-
-const clientId = process.env.GOOGLE_CLIENT_ID;
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const callbackUrl = "http://localhost:8000/api/auth/google/callback";
-
-// Initiate login — redirect user to Google
-app.get("/google", (req, res) => {
-  const uri = GoogleLogin(clientId, callbackUrl);
-  return res.redirect(uri);
-});
-
-// Handle callback — exchange code for user data
-app.get("/api/auth/google/callback", async (req, res) => {
-  const data = await GoogleCallback(
-    req.query.code,
-    clientId,
-    clientSecret,
-    callbackUrl
-  );
-  return res.json(data);
-});`}
+        filename="npm"
+        language="bash"
+        code={`npm install @kartikgangil/watchman_js`}
       />
 
-      <h2 id="github">GitHub</h2>
-      <ol className="ml-5 list-decimal space-y-2 text-[15px] text-foreground/90">
-        <li>
-          Go to GitHub Settings → Developer settings → OAuth Apps and click{" "}
-          <strong>New OAuth App</strong>.
-        </li>
-        <li>
-          Set the <strong>Authorization callback URL</strong> to{" "}
-          <code>http://localhost:8000/api/auth/github/callback</code>.
-        </li>
-        <li>
-          Copy the <strong>Client ID</strong> and generate a{" "}
-          <strong>Client Secret</strong>, then set them as{" "}
-          <code>GITHUB_CLIENT_ID</code> and <code>GITHUB_CLIENT_SECRET</code>.
-        </li>
-      </ol>
+      <h2 id="usage-guide">⚙️ Usage Guide</h2>
+
+      <h3 id="manual-auth">Manual Authentication</h3>
       <CodeBlock
-        filename="routes/auth.js"
+        filename="controllers/auth.controller.js"
         language="js"
-        code={`import { GithubLogin, GithubCallback } from "@kartikgangil/watchman_js";
+        code={`// controllers/auth.controller.js
 
-const clientId = process.env.GITHUB_CLIENT_ID;
-const clientSecret = process.env.GITHUB_CLIENT_SECRET;
-const callbackUrl = "http://localhost:8000/api/auth/github/callback";
+const {
+  hashPassword,
+  comparePassword,
+} = require('@kartikgangil/watchman_js');
 
-// Initiate login — redirect user to GitHub
-app.get("/github", async (req, res) => {
-  const uri = await GithubLogin(callbackUrl, clientId);
-  return res.redirect(uri);
-});
+const { GenToken } = require('@kartikgangil/watchman_js');
 
-// Handle callback — exchange code for user data
-app.get("/api/auth/github/callback", async (req, res) => {
-  const data = await GithubCallback(
-    req.query.code,
-    clientId,
-    clientSecret
-  );
-  return res.json(data);
-});`}
-      />
+// Dummy database
+const users = [];
 
-      <Callout type="note">
-        Note the argument order for <code>GithubLogin</code>:{" "}
-        <strong>callbackUrl first, then clientId</strong>. This differs from
-        the Google provider where clientId comes first.
-      </Callout>
+// SIGNUP
+const signup = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
 
-      <h2 id="linkedin">LinkedIn</h2>
-      <ol className="ml-5 list-decimal space-y-2 text-[15px] text-foreground/90">
-        <li>
-          Create an app on the{" "}
-          <a
-            href="https://developer.linkedin.com/apps"
-            target="_blank"
-            rel="noreferrer"
-          >
-            LinkedIn Developer Portal
-          </a>
-          .
-        </li>
-        <li>
-          Under <strong>Auth</strong>, add{" "}
-          <code>http://localhost:8000/api/auth/linkedin/callback</code> as an
-          authorized redirect URL.
-        </li>
-        <li>
-          Set <code>LINKEDIN_CLIENT_ID</code> and{" "}
-          <code>LINKEDIN_CLIENT_SECRET</code> in your <code>.env</code>.
-        </li>
-      </ol>
-      <CodeBlock
-        filename="routes/auth.js"
-        language="js"
-        code={`import { LinkedInLogin, LinkedInCallback } from "@kartikgangil/watchman_js";
+    // check existing user
+    const userExists = users.find(
+      (user) => user.email === email
+    );
 
-const clientId = process.env.LINKEDIN_CLIENT_ID;
-const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
-const callbackUrl = "http://localhost:8000/api/auth/linkedin/callback";
+    if (userExists) {
+      return res.status(400).json({
+        success: false,
+        message: 'User already exists',
+      });
+    }
 
-// Initiate login — redirect user to LinkedIn
-app.get("/linkedin", (req, res) => {
-  const uri = LinkedInLogin(clientId, callbackUrl);
-  return res.redirect(uri);
-});
+    // hash password
+    const hashedPassword = await hashPassword(password);
 
-// Handle callback — exchange code for user data
-app.get("/api/auth/linkedin/callback", async (req, res) => {
-  const data = await LinkedInCallback(
-    req.query.code,
-    clientId,
-    clientSecret,
-    callbackUrl
-  );
-  return res.json(data);
-});`}
-      />
-    </DocsPage>
-  );
-}
+    // create user
+    const newUser = {
+      id: users.length + 1,
+      name,
+      email,
+      password: hashedPassword,
+    };
+
+    users.push(newUser);
+
+    // generate token
+    const token = await GenToken(
+      {
+        id: newUser.id,
+        email: newUser.email,
+      },
+      {
+        expiresIn: '7d',
+      }
+        "secret"
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: 'Signup successful',
+      token,
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Signup failed',
+      error: error.message,
+    });
+  }
+};
+
+// LOGIN
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // find user
+    const user = users.find(
+      (user) => user.email === email
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    // compare password
+    const isMatch = await comparePassword(
+      password,
+      user.password
+    );
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid credentials',
+      });
+    }
+
+    // generate token
+    const token = await GenToken(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      {
+        expiresIn: '7d',
+      }
+        "secret"
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+
+  } catch (error) {
+    return
